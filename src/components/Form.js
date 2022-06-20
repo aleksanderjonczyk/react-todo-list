@@ -1,18 +1,29 @@
-import React, { useEffect } from "react";
+import React from "react";
 
-const Form = ({ setInputValue, inputValue, setTodos, todos }) => {
+const Form = ({
+  setInputValue,
+  inputValue,
+  setTodos,
+  todos,
+  setTaskStatus,
+}) => {
   const submitHandler = e => {
     e.preventDefault();
+    if (!inputValue) return;
 
     setTodos([
       ...todos,
       {
         text: inputValue,
         completed: false,
-        id: Math.floor(Math.random() * 1000),
+        id: Math.ceil(Math.random() * 1000),
       },
     ]);
     setInputValue("");
+  };
+
+  const statusHandler = e => {
+    setTaskStatus(e.target.value);
   };
 
   return (
@@ -28,7 +39,7 @@ const Form = ({ setInputValue, inputValue, setTodos, todos }) => {
         <i className="fas fa-plus"></i>
       </button>
       <div className="select">
-        <select name="todos" className="filter-todo">
+        <select onChange={statusHandler} name="todos" className="filter-todo">
           <option value="all">All</option>
           <option value="completed">Completed</option>
           <option value="uncompleted">Uncompleted</option>

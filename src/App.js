@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./style.css";
 
 import Form from "./components/Form";
@@ -7,6 +7,25 @@ import TodoList from "./components/TodoList";
 const App = () => {
   const [inputValue, setInputValue] = useState("");
   const [todos, setTodos] = useState([]);
+  const [taskStatus, setTaskStatus] = useState("all");
+  const [taskFilter, setTaskFilter] = useState([]);
+
+  useEffect(() => {
+    const filterTodos = () => {
+      switch (taskStatus) {
+        case "completed":
+          setTaskFilter(todos.filter(todo => todo.completed === true));
+          break;
+        case "uncompleted":
+          setTaskFilter(todos.filter(todo => todo.completed === false));
+          break;
+        default:
+          setTaskFilter(todos);
+          break;
+      }
+    };
+    filterTodos();
+  }, [todos, taskStatus]);
 
   return (
     <React.Fragment>
@@ -18,8 +37,9 @@ const App = () => {
         inputValue={inputValue}
         setTodos={setTodos}
         todos={todos}
+        setTaskStatus={setTaskStatus}
       />
-      <TodoList todos={todos} />
+      <TodoList todos={todos} setTodos={setTodos} taskFilter={taskFilter} />
     </React.Fragment>
   );
 };
