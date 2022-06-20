@@ -11,21 +11,40 @@ const App = () => {
   const [taskFilter, setTaskFilter] = useState([]);
 
   useEffect(() => {
-    const filterTodos = () => {
-      switch (taskStatus) {
-        case "completed":
-          setTaskFilter(todos.filter(todo => todo.completed === true));
-          break;
-        case "uncompleted":
-          setTaskFilter(todos.filter(todo => todo.completed === false));
-          break;
-        default:
-          setTaskFilter(todos);
-          break;
-      }
-    };
+    getTodosFromLocal();
+  }, []);
+
+  useEffect(() => {
     filterTodos();
+    saveTodos();
   }, [todos, taskStatus]);
+
+  const filterTodos = () => {
+    switch (taskStatus) {
+      case "completed":
+        setTaskFilter(todos.filter(todo => todo.completed === true));
+        break;
+      case "uncompleted":
+        setTaskFilter(todos.filter(todo => todo.completed === false));
+        break;
+      default:
+        setTaskFilter(todos);
+        break;
+    }
+  };
+
+  const saveTodos = () => {
+    if (localStorage.getItem("todos") == null) {
+      localStorage.setItem("todos", JSON.stringify([]));
+    } else {
+      localStorage.setItem("todos", JSON.stringify(todos));
+    }
+  };
+
+  const getTodosFromLocal = () => {
+    let localTodos = JSON.parse(localStorage.getItem("todos"));
+    setTodos(localTodos);
+  };
 
   return (
     <React.Fragment>
